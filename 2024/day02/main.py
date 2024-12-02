@@ -43,7 +43,7 @@ def part2():
         print('Safe reports:', safe_reports)
 
 def checkPair(diff, current_sign):
-    if abs(diff) == 0 or abs(diff) > 3:
+    if diff == 0 or abs(diff) > 3:
         return False
     elif diff * current_sign < 0: # 0 * 1 >= 0, 0 * -1 >= 0, 1 * 2 >= 0, -1 * -2 >= 0
         return False
@@ -53,7 +53,7 @@ def checkLevels(levels):
     current_sign = 0
     for i in range(len(levels)-1):
         diff = levels[i] - levels[i+1]
-        if abs(diff) == 0 or abs(diff) > 3:
+        if diff == 0 or abs(diff) > 3:
             return False
         elif diff * current_sign < 0: # 0 * 1 >= 0, 0 * -1 >= 0, 1 * 2 >= 0, -1 * -2 >= 0
             return False
