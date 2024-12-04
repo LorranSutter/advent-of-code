@@ -34,24 +34,19 @@ def part2():
                 if matrix[i][j] == "A":
                     xmas_count += findMas(matrix, i, j, size)
 
-    print("Total XMAS:", xmas_count)
+    print("Total X-MAS:", xmas_count)
 
 
 def findXmas(matrix, i, j, size):
     count = 0
-    print(i, j)
     # Horizontal ->
     count += matrix[i][j : j + 4] == "XMAS"
-    print(count)
     # Horizontal <-
     count += matrix[i][j - 3 : j + 1] == "SAMX"
-    print(count)
     # Vertical \/
     count += "".join([matrix[i + k][j] for k in range(4) if i + k < size]) == "XMAS"
-    print(count)
     # Vertical /\
     count += "".join([matrix[i - k][j] for k in range(4) if 0 <= i - k]) == "XMAS"
-    print(count)
     # Diagonal --\/
     count += (
         "".join(
@@ -59,13 +54,11 @@ def findXmas(matrix, i, j, size):
         )
         == "XMAS"
     )
-    print(count)
     # Diagonal --/\
     count += (
         "".join([matrix[i + k][j - k] for k in range(4) if i + k < size and 0 <= j - k])
         == "XMAS"
     )
-    print(count)
     # Diagonal \/--
     count += (
         "".join([matrix[i - k][j + k] for k in range(4) if 0 <= i - k and j + k < size])
@@ -76,7 +69,6 @@ def findXmas(matrix, i, j, size):
         "".join([matrix[i - k][j - k] for k in range(4) if 0 <= i - k and 0 <= j - k])
         == "XMAS"
     )
-    print(count)
 
     return count
 
