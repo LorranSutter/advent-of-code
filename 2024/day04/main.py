@@ -38,36 +38,37 @@ def part2():
 
 
 def findXmas(matrix, i, j, size):
+    xmas = "XMAS"
     count = 0
     # Horizontal ->
-    count += matrix[i][j : j + 4] == "XMAS"
+    count += matrix[i][j : j + 4] == xmas
     # Horizontal <-
-    count += matrix[i][j - 3 : j + 1] == "SAMX"
+    count += matrix[i][j - 3 : j + 1] == xmas[::-1]
     # Vertical \/
-    count += "".join([matrix[i + k][j] for k in range(4) if i + k < size]) == "XMAS"
+    count += "".join([matrix[i + k][j] for k in range(4) if i + k < size]) == xmas
     # Vertical /\
-    count += "".join([matrix[i - k][j] for k in range(4) if 0 <= i - k]) == "XMAS"
+    count += "".join([matrix[i - k][j] for k in range(4) if 0 <= i - k]) == xmas
     # Diagonal --\/
     count += (
         "".join(
             [matrix[i + k][j + k] for k in range(4) if i + k < size and j + k < size]
         )
-        == "XMAS"
+        == xmas
     )
     # Diagonal --/\
     count += (
         "".join([matrix[i + k][j - k] for k in range(4) if i + k < size and 0 <= j - k])
-        == "XMAS"
+        == xmas
     )
     # Diagonal \/--
     count += (
         "".join([matrix[i - k][j + k] for k in range(4) if 0 <= i - k and j + k < size])
-        == "XMAS"
+        == xmas
     )
     # Diagonal /\--
     count += (
         "".join([matrix[i - k][j - k] for k in range(4) if 0 <= i - k and 0 <= j - k])
-        == "XMAS"
+        == xmas
     )
 
     return count
