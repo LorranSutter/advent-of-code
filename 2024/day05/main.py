@@ -1,4 +1,5 @@
 import os
+import collections
 
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
@@ -6,7 +7,7 @@ abs_file_path = os.path.join(script_dir, rel_path)
 
 
 def part1():
-    rules = {}
+    rules = collections.defaultdict(lambda: [])
     updates = []
     with open(abs_file_path) as f:
         # Rules
@@ -24,13 +25,12 @@ def part1():
             pages = updates.rstrip("\n").split(",")
             if isCorrectlyOrdered(rules, pages):
                 s_mid_pages += int(pages[len(pages) // 2])
-            print()
 
     print("Sum middle pages:", s_mid_pages)
 
 
 def part2():
-    rules = {}
+    rules = collections.defaultdict(lambda: [])
     updates = []
     with open(abs_file_path) as f:
         # Rules
@@ -55,8 +55,6 @@ def part2():
 
 def isCorrectlyOrdered(rules, pages):
     for i, first_page in enumerate(pages[:-1], 1):
-        if first_page not in rules:
-            return False
         for page_after in pages[i:]:
             if page_after not in rules[first_page]:
                 return False
@@ -68,9 +66,6 @@ def orderIfNeeded(rules, pages, index, size):
         return pages
 
     for i in range(index, size - 1):
-        if pages[i] not in rules:
-            pushToEnd(pages, i)
-            return orderIfNeeded(rules, pages, i, size)
         for page_after in pages[i + 1 :]:
             if page_after not in rules[pages[i]]:
                 pushToEnd(pages, i)
