@@ -1,4 +1,5 @@
 import os
+import math
 
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
@@ -7,17 +8,18 @@ abs_file_path = os.path.join(script_dir, rel_path)
 
 def part1():
     arr = read_file()
-    
+
     temp = []
     for _ in range(25):
         for i in range(len(arr)):
             if arr[i] == 0:
                 temp.append(1)
             else:
-                size = len(str(arr[i]))
+                size = math.floor(math.log10(arr[i])) + 1
                 if size % 2 == 0:
-                    stone1 = int(str(arr[i])[: size // 2])
-                    stone2 = int(str(arr[i])[size // 2 :])
+                    middle = 10 ** (size // 2)
+                    stone1 = arr[i] // middle
+                    stone2 = arr[i] % middle
                     temp.extend([stone1, stone2])
                 else:
                     temp.append(arr[i] * 2024)
