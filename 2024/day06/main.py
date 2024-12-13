@@ -16,12 +16,9 @@ def part1():
 def part2():
     chart, initial_pos = read_file()
 
-    path = walk_path(chart, initial_pos, (-1, 0), len(chart))
     total_obstacles = 0
-    for pos in path:
-        if pos == initial_pos:
-            continue
-
+    path = walk_path(chart, initial_pos, (-1, 0), len(chart))
+    for pos in path[1:]:
         chart[pos[0]][pos[1]] = "#"
         total_obstacles += walk_2(chart, initial_pos, (-1, 0), len(chart))
         chart[pos[0]][pos[1]] = "."
