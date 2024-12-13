@@ -5,21 +5,31 @@ rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
-# def firstApproach():
-#     obstruction_pos = []
-#     guard_pos = []
-#     with open(abs_file_path) as f:
-#         for i, row in enumerate(f):
-#             for j, item in enumerate(row.rstrip("\n")):
-#                 if item == "#":
-#                     obstruction_pos.append([i, j])
-#                 elif item == "^":
-#                     guard_pos = [i, j]
-
-#     print("Distinct positions visited:")
-
-
 def part1():
+    chart, initial_pos = read_file()
+    chart[initial_pos[0]][initial_pos[1]] = "X"
+
+    positions = walk(chart, initial_pos, (-1, 0), 1, len(chart))
+    print("Distinct positions visited:", positions)
+
+
+def part2():
+    chart, initial_pos = read_file()
+
+    path = walk_path(chart, initial_pos, (-1, 0), len(chart))
+    total_obstacles = 0
+    for pos in path:
+        if pos == initial_pos:
+            continue
+
+        chart[pos[0]][pos[1]] = "#"
+        total_obstacles += walk_2(chart, initial_pos, (-1, 0), len(chart))
+        chart[pos[0]][pos[1]] = "."
+
+    print("Total obstacles:", total_obstacles)
+
+
+def read_file():
     chart = []
     initial_pos = None
     with open(abs_file_path) as f:
@@ -29,28 +39,17 @@ def part1():
             if not initial_pos:
                 for j, item in enumerate(row):
                     if item == "^":
-                        initial_pos = [i, j]
-                        chart[i][j] = "X"
-
-    positions = walk(chart, initial_pos, [-1, 0], 1, len(chart))
-    print("Distinct positions visited:", positions)
-
-
-def part2():
-    with open(abs_file_path) as f:
-        for row in f:
-            pass
-
-    print("Distinct positions visited:")
+                        initial_pos = (i, j)
+    return chart, initial_pos
 
 
 def walk(chart, pos, direction, count, size):
-    while in_bounds(pos[0], pos[1], size):
+    while in_bounds(pos, size):
 
         if chart[pos[0]][pos[1]] == "#":
             return walk(
                 chart,
-                [pos[0] - direction[0], pos[1] - direction[1]],
+                sub(pos, direction),
                 rotate(direction),
                 count,
                 size,
@@ -59,17 +58,64 @@ def walk(chart, pos, direction, count, size):
             count += 1
             chart[pos[0]][pos[1]] = "X"
 
-        pos[0], pos[1] = pos[0] + direction[0], pos[1] + direction[1]
+        pos = add(pos, direction)
 
     return count
 
 
-def in_bounds(posX, posY, size):
-    return posX >= 0 and posX < size and posY >= 0 and posY < size
+def walk_path(chart, pos, direction, size):
+    path = []
+    while in_bounds(pos, size):
+
+        if chart[pos[0]][pos[1]] == "#":
+            pos = sub(pos, direction)
+            direction = rotate(direction)
+        elif pos not in path:
+            path.append(pos)
+
+        pos = add(pos, direction)
+
+    return path
+
+
+def walk_2(chart, pos, direction, size):
+    visited = []
+    while in_bounds(pos, size):
+
+        if chart[pos[0]][pos[1]] == "#":
+            if (pos, direction) not in visited:
+                visited.append((pos, direction))
+            else:
+                return 1
+
+            pos = sub(pos, direction)
+            direction = rotate(direction)
+
+        else:
+            pos = add(pos, direction)
+
+    return 0
+
+
+def in_bounds(pos, size):
+    return pos[0] >= 0 and pos[0] < size and pos[1] >= 0 and pos[1] < size
 
 
 def rotate(v):
     return [v[1], -v[0]]
 
 
-part1()
+def add(a, b):
+    return (a[0] + b[0], a[1] + b[1])
+
+
+def sub(a, b):
+    return (a[0] - b[0], a[1] - b[1])
+
+
+def print_chart(chart):
+    for row in chart:
+        print("".join(row))
+
+
+part2()
