@@ -3,7 +3,7 @@ import re
 import math
 
 script_dir = os.path.dirname(__file__)
-rel_path = "input_sample"
+rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
@@ -12,11 +12,10 @@ def part1():
 
     tokens_spend = 0
     for i in range(len(prizes)):
-        best_a, best_b, min_cost = minimize_cost(
+        _, _, min_cost = minimize_cost_diophantine(
             buttons_a[i], buttons_b[i], 3, 1, prizes[i][0], prizes[i][1]
         )
         if min_cost != math.inf:
-            # print(best_a, best_b, min_cost)
             tokens_spend += min_cost
 
     print("Tokens spend:", tokens_spend)
@@ -28,23 +27,11 @@ def part2():
 
     tokens_spend = 0
     for i in range(len(prizes)):
-        print(i)
-        # button_a = (buttons_a[i][0]+shift//100000000,buttons_a[i][1]+shift//100000000)
-        # button_b = (buttons_b[i][0]+shift//100000000,buttons_b[i][1]+shift//100000000)
         prize = (prizes[i][0] + shift, prizes[i][1] + shift)
-        # best_a, best_b, min_cost = minimize_cost(
-        #     button_a, button_b, 3, 1, prize[0], prize[1]
-        # )
-        best_a, best_b, min_cost = minimize_cost(
+        _, _, min_cost = minimize_cost_cramer(
             buttons_a[i], buttons_b[i], 3, 1, prize[0], prize[1]
         )
-        if min_cost == 0:
-            print(best_a, best_b, min_cost)
-        if min_cost == math.inf:
-            print(best_a, best_b, min_cost)
-        if min_cost != math.inf:
-            # print(best_a, best_b, min_cost)
-            tokens_spend += min_cost
+        tokens_spend += min_cost
 
     print("Tokens spend:", tokens_spend)
 
@@ -69,31 +56,17 @@ def read_file():
     return buttons_a, buttons_b, prizes
 
 
-def minimize_cost(A, B, cost_A, cost_B, X, Y):
+def minimize_cost_diophantine(A, B, cost_A, cost_B, X, Y):
+    """
+    Diophantine system equations
+    For some reason only works for part 1
+    """
     max_b = X // B[0] if X > Y else Y // B[1]
-    # max_b = 100000000
-    # print(max_b)
-    # Check feasibility using the GCD
-    # det = A[0] * B[1] - A[1] * B[0]
-    gcd = math.gcd(A[0],A[1],B[0],B[1])
-    # print(A,B,cost_A,cost_B,X,Y)
-    # print(det,X)
-    # print(det,X,math.gcd(det,X))
-    # print(det,Y,math.gcd(det,Y))
-    # if math.gcd(det, X) != 1 or math.gcd(det, Y) != 1:
-    if X % gcd != 0 or Y % gcd != 0:
-        print('here')
-        # print(det,math.gcd(det, X),math.gcd(det, Y))
-        return 0,0,0
 
     # Try all possible values of b within a reasonable range
     best_cost = math.inf
     best_a, best_b = 0, 0
     for b in range(0, max_b):
-        # if b%1000000 == 0:
-        #     print(max_b-b)
-        # print((X - B[0] * b) % A[0])
-        # input()
         if (X - B[0] * b) % A[0] == 0:
             a = (X - B[0] * b) // A[0]
             if A[1] * a + B[1] * b == Y:  # Verify the second equation
@@ -105,10 +78,39 @@ def minimize_cost(A, B, cost_A, cost_B, X, Y):
     return best_a, best_b, best_cost
 
 
+def minimize_cost_cramer(A, B, cost_A, cost_B, X, Y):
+    """
+    Cramer's rule to solve linear system
+
+    // a*A[0] + b*B[0] = X
+    \\ b*A[1] + b*B[1] = Y
+
+    det = | A[0] B[0] |
+          | A[1] B[1] |
+
+         | X B[0] |
+         | Y B[1] |
+    a = ------------
+            det
+
+         | X A[0] |
+         | Y A[1] |
+    b = ------------
+            det
+    """
+
+    det = A[0] * B[1] - A[1] * B[0]
+
+    a = (X * B[1] - B[0] * Y) // det
+    b = (A[0] * Y - X * A[1]) // det
+
+    if A[0] * a + B[0] * b == X and A[1] * a + B[1] * b == Y:
+        return a, b, cost_A * a + cost_B * b
+    return 0, 0, 0
+
+
 def brute_force(A, B, cost_A, cost_B, X, Y):
     max_b = X // B[0] if X > Y else Y // B[1]
-
-    print(A, B, cost_A, cost_B, X, Y)
 
     min_cost = math.inf
     best_a, best_b = 0, 0
