@@ -1,5 +1,6 @@
 import os
 import re
+import math
 
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
@@ -26,12 +27,36 @@ def part1():
         quadrant_count[0] * quadrant_count[1] * quadrant_count[2] * quadrant_count[3]
     )
 
+    print_grid(size, positions)
+
     print("Safety factor:", safety_factor)
 
 
 def part2():
+    '''
+    Checks if there is at least one robot next to another
+    Sum up all robots that are close
+    The greatest sum is likely to have the cristmas tree
+    Not the most optimal way
+    '''
+    size = size_input if rel_path == "input" else size_sample
+    positions, velocities = read_file()
 
-    print("Safety factor:")
+    closest = 0
+    seconds_to_christmas = 0
+    for s in range(1, 10000):
+        for i in range(len(positions)):
+            positions[i] = mod(add(positions[i], velocities[i]), size)
+
+        close = 0
+        for p in positions:
+            if any_close(p, positions):
+                close += 1
+        if close > closest:
+            closest = close
+            seconds_to_christmas = s
+
+    print("Seconds to Christmas Tree:", seconds_to_christmas)
 
 
 def read_file():
@@ -48,7 +73,7 @@ def read_file():
     return positions, velocities
 
 
-def print_grid(size, positions):
+def get_grid(size, positions):
     grid = [["." for _ in range(size[1])] for _ in range(size[0])]
 
     for p in positions:
@@ -56,6 +81,12 @@ def print_grid(size, positions):
             grid[p[0]][p[1]] = "1"
         else:
             grid[p[0]][p[1]] = str(int(grid[p[0]][p[1]]) + 1)
+
+    return grid
+
+
+def print_grid(size, positions):
+    grid = get_grid(size, positions)
 
     for i in range(size[0]):
         print("".join(grid[i]))
@@ -79,6 +110,15 @@ def in_quadrant(p, x0, x1, y0, y1):
     return p[0] >= x0 and p[0] <= x1 and p[1] >= y0 and p[1] <= y1
 
 
+def any_close(p, positions):
+    for pos in positions:
+        if p == pos:
+            continue
+        elif dist(p, pos) <= 1:
+            return True
+    return False
+
+
 def mul(a, v):
     return (a * v[0], a * v[1])
 
@@ -91,4 +131,9 @@ def mod(v1, v2):
     return (v1[0] % v2[0], v1[1] % v2[1])
 
 
-part1()
+def dist(v1, v2):
+    a, b = v2[0] - v1[0], v2[1] - v1[1]
+    return math.sqrt(a * a + b * b)
+
+
+part2()
