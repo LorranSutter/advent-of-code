@@ -1,4 +1,19 @@
 import os
+from typing import List
+from dataclasses import dataclass
+
+
+@dataclass
+class File:
+    ID: int
+    num_files: int
+
+
+@dataclass
+class Space:
+    files: List[File]
+    free: int
+
 
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
@@ -10,13 +25,19 @@ def part1():
     total_num_files = count_files(disk_map)
     file_array = build_file_array(disk_map)
 
-    checksum = calculate_checksum(disk_map, file_array, total_num_files)
+    checksum = calculate_checksum_1(disk_map, file_array, total_num_files)
 
     print("File systeam checksum:", checksum)
 
 
 def part2():
-    print("File systeam checksum:")
+    disk_map = read_file()
+    spaces = build_array(disk_map)
+    compact_files(spaces)
+
+    checksum = calculate_checksum_2(spaces)
+
+    print("File systeam checksum:", checksum)
 
 
 def read_file():
@@ -25,17 +46,50 @@ def read_file():
 
 
 def count_files(disk_map):
+    # Iterate only over file digits
     return sum((int(digit) for digit in disk_map[::2]))
 
 
 def build_file_array(disk_map):
     file_array = []
+    # Iterate only over file digits
     for i, digit in enumerate(disk_map[::2]):
         file_array.extend([i for _ in range(digit)])
     return file_array
 
 
-def calculate_checksum(disk_map, file_array, total_num_files):
+def build_array(disk_map):
+    spaces = []
+    for i, digit in enumerate(disk_map):
+        if i % 2 == 0:
+            spaces.append(Space([File(i // 2, digit)], 0))
+        else:
+            spaces.append(Space([File(0, 0)], digit))
+
+    return spaces
+
+def compact_files(spaces):    
+    spaces_array_size = len(spaces)
+    for i, chunk in enumerate(spaces[::-2]):
+        chunk_size = chunk.files[0].num_files
+        if chunk_size == 0:
+            continue
+
+        chunk_id = spaces_array_size - 2 * i - 1
+        for j, space in enumerate(spaces[:chunk_id]):
+            if space.free == 0:
+                continue
+            if space.free >= chunk_size:
+                spaces[j].free -= chunk_size
+                spaces[j].files.extend(chunk.files)
+
+                spaces[chunk_id].files = [File(0, 0)]
+                spaces[chunk_id].free += chunk_size
+
+                break
+
+
+def calculate_checksum_1(disk_map, file_array, total_num_files):
     """
     00...111...2...333.44.5555.6666.777.888899
     |                                        |
@@ -63,4 +117,25 @@ def calculate_checksum(disk_map, file_array, total_num_files):
         direction *= -1
 
 
-part1()
+def calculate_checksum_2(spaces):
+    checksum, file_counting = 0, 0
+    for space in spaces:
+        for file in space.files:
+            for _ in range(file.num_files):
+                checksum += file.ID * file_counting
+                file_counting += 1
+        file_counting += space.free
+    
+    return checksum
+
+
+
+def print_disk(file_array, disk_array):
+    res = ""
+    file_array = filter(lambda item: item != "", file_array)
+    for f, s in zip(file_array, disk_array):
+        res += f + "." * s
+    print(res)
+
+
+part2()
