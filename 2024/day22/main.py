@@ -41,7 +41,7 @@ def part2():
 
             sequence = sequence[1:] + (secret % 10 - previous,)
 
-            if sequence[0] != 0 and sequence not in seen_seq:
+            if sequence[0] != 10 and sequence not in seen_seq:
                 seen_seq.add(sequence)
                 sequences[sequence] += secret % 10
 
