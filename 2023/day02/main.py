@@ -49,15 +49,15 @@ def read_file():
     with open(abs_file_path) as f:
         for line in f:
             line = line.rstrip("\n").split(":")
-            line = line[1]  # only games
-            line_games = line.split(";")  # separate games
+            line = line[1]  # only games (3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green)
+            line_games = line.split(";")  # separate games [[3 blue, 4 red], [1 red, 2 green, 6 blue], [2 green]]
 
             new_set_game = []
             for game in line_games:
-                game = game.split(",")
+                game = game.split(",") # [[3 blue], [4 red]]
                 new_game = [0 for _ in range(3)]
                 for cubes in game:
-                    cubes = cubes.strip().split(" ")
+                    cubes = cubes.strip().split(" ") # [3,blue]
                     if cubes[1] == "red":
                         new_game[0] = int(cubes[0])
                     if cubes[1] == "green":
