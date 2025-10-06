@@ -15,7 +15,6 @@ rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
-# 135221 Too high
 def part1():
     cards = read_file()
 
@@ -27,15 +26,37 @@ def part1():
                 count_winning += 1
 
         if count_winning > 0:
-            total_points += 2**(count_winning-1)
+            total_points += 2 ** (count_winning - 1)
 
     print("Total card points:", total_points)
 
 
 def part2():
-    pass
+    """
+    Create a list to keep track of how many copies of each card
+    Search for how many wins in each card, count how many wins
+    When a win is found, update the cards_count at the index after the current card
+    The index depends on the number of wins, 1 win -> next card, 2 wins -> next 2 cards...
+    The trick is how much to add to the cards_count per index
+        This is the number of cards of the current index already calculated in the previous iteration
+        Ex, card 1 -> 4 wins
+            card 2, 3, 4 -> increases 1
+            When scan card 2, we will add 2 to the next card
+    """
+    cards = read_file()
 
-    # print("Total card points:", total_points)
+    cards_count = [1 for _ in cards]
+    total_cards = 0
+    for i, card in enumerate(cards):
+        total_cards += 1
+        count_wins = 0
+        for num in card.have:
+            if num in card.winning:
+                count_wins += 1
+                cards_count[i + count_wins] += cards_count[i]
+        total_cards += cards_count[i]
+
+    print("Total cards:", total_cards)
 
 
 def read_file() -> List[Card]:
@@ -55,4 +76,4 @@ def read_file() -> List[Card]:
     return cards
 
 
-part1()
+part2()
