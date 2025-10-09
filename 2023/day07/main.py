@@ -30,12 +30,14 @@ cards_strength = {
     "4": 4,
     "3": 3,
     "2": 2,
+    "J": 1,
 }
 
 
 """
 Read all hands
 Classify the hand type (pair, two pairs...) as a number (1, 2...)
+Classigy the strengh of the hand based on the cards_strength dict
 Make a modified sorting algorithm
     Sort by the hand type
     If there are two hands with same type, check stronger card
@@ -45,16 +47,6 @@ Make a modified sorting algorithm
 def part1():
     hands = parse_file()
     hands = list(map(classify_hand, hands))
-
-    def compare_hand(hand: Hand):
-        return (
-            hand.hand_type,
-            hand.hand_strength[0],
-            hand.hand_strength[1],
-            hand.hand_strength[2],
-            hand.hand_strength[3],
-            hand.hand_strength[4],
-        )
 
     hands.sort(key=compare_hand)
 
@@ -66,11 +58,38 @@ def part1():
 
 
 def part2():
-    pass
+    hands = parse_file()
+    hands = list(map(lambda hand: classify_hand(hand, with_joker=True), hands))
+
+    hands.sort(key=compare_hand)
+
+    total_winnings = 0
+    for i, hand in enumerate(hands, 1):
+        total_winnings += hand.bid * i
+
+    print("Total winnings:", total_winnings)
 
 
-def classify_hand(hand: Hand):
+def classify_hand(hand: Hand, with_joker: bool = False):
     cards_count = Counter(hand.cards)
+
+    # Replace the most common card by the Joker
+    if with_joker and 0 < cards_count["J"] < 5:
+        most_common = cards_count.most_common()
+
+        # Joker most common, replace the second most common
+        if most_common[0][0] == "J":
+            cards_count[most_common[1][0]] += cards_count["J"]
+            cards_count.pop("J")
+        else:
+            # Replace the Joker by the most common
+            cards_count["J"] += most_common[0][1]
+
+            # Removes the card that the Joker replaced
+            for common in most_common:
+                if common[0] != "J":
+                    cards_count.pop(common[0])
+                    break
 
     # Number of different cards
     match len(cards_count):
@@ -97,6 +116,17 @@ def classify_hand(hand: Hand):
     return hand
 
 
+def compare_hand(hand: Hand):
+    return (
+        hand.hand_type,
+        hand.hand_strength[0],
+        hand.hand_strength[1],
+        hand.hand_strength[2],
+        hand.hand_strength[3],
+        hand.hand_strength[4],
+    )
+
+
 def parse_file() -> List[Hand]:
     hands = list()
     with open(abs_file_path) as f:
@@ -109,4 +139,4 @@ def parse_file() -> List[Hand]:
     return hands
 
 
-part1()
+part2()
