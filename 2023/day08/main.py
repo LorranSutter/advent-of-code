@@ -1,5 +1,6 @@
 import os
 import re
+import math
 from itertools import cycle
 from typing import Dict, Tuple
 from dataclasses import dataclass
@@ -39,16 +40,46 @@ def part1():
 
     steps = 0
     current_node = 'AAA'
-    for i in cycle(instructions):
+    for instruction in cycle(instructions):
         if current_node == 'ZZZ':
             break
         steps += 1
-        current_node = nodes[current_node][i]
+        current_node = nodes[current_node][instruction]
 
     print("Total steps:", steps)
 
 def part2():
-    pass
+    """
+    Read instructions as string
+    Create a dictionary of Nodes
+        'AAA' -> Node(L='BBB', R='CCC')
+
+    Find all nodes that ends with A (starting nodes)
+    Iterate over each starting node
+    For each starting iterate over instructions in a circular manner
+    Count how many steps each starting node takes to reach a Z node
+
+    Since we should walk the nodes simultaneously, the ones that
+    already reached a Z node will start walking the same path.
+
+    If we want to find the total steps that all nodes need
+    to get to a Z node at the same time, we just have to
+    calculate the least common multiple of the total steps
+    of each starting node
+    """
+    instructions, nodes = parse_file()
+    starts = [node for node in nodes.keys() if node[-1] == 'A']
+
+    steps_to_z = [0 for _ in range(len(starts))] 
+
+    for i, current_node in enumerate(starts):
+        for instruction in cycle(instructions):
+            if current_node[-1] == 'Z':
+                break
+            steps_to_z[i] += 1
+            current_node = nodes[current_node][instruction]
+
+    print("Total steps:", math.lcm(*steps_to_z))
 
 
 def parse_file() -> Tuple[str, Dict[str, Node]]:
@@ -67,4 +98,4 @@ def parse_file() -> Tuple[str, Dict[str, Node]]:
     return instructions, nodes
 
 
-part1()
+part2()
