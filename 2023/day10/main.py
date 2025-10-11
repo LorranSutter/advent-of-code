@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Node:
+class Pipe:
     Left: int
     Right: int
 
@@ -68,40 +68,40 @@ def read_file() -> List[Tuple[str]]:
     return matrix
 
 
-def parse_matrix_to_pipes(matrix: List[Tuple[str]]) -> Tuple[Node, List[Node]]:
+def parse_matrix_to_pipes(matrix: List[Tuple[str]]) -> Tuple[Pipe, List[Pipe]]:
     """
     Converts the 2-dim to a unidimensional array
-    Each array element is a Node(left, right), where
+    Each array element is a Pipe(left, right), where
     left and right points to the array index of the adjacent pipe
     """
     m, n = len(matrix), len(matrix[0])
 
-    start = Tuple[int, Node]
+    start = Tuple[int, Pipe]
     pipes = list()
 
     for i in range(m):
         for j in range(n):
             match matrix[i][j]:
                 case "|":
-                    pipe = Node((i - 1) * n + j, (i + 1) * n + j)
+                    pipe = Pipe((i - 1) * n + j, (i + 1) * n + j)
                 case "-":
-                    pipe = Node(i * n + j - 1, i * n + j + 1)
+                    pipe = Pipe(i * n + j - 1, i * n + j + 1)
                 case "L":
-                    pipe = Node((i - 1) * n + j, i * n + j + 1)
+                    pipe = Pipe((i - 1) * n + j, i * n + j + 1)
                 case "J":
-                    pipe = Node((i - 1) * n + j, i * n + j - 1)
+                    pipe = Pipe((i - 1) * n + j, i * n + j - 1)
                 case "7":
-                    pipe = Node(i * n + j - 1, (i + 1) * n + j)
+                    pipe = Pipe(i * n + j - 1, (i + 1) * n + j)
                 case "F":
-                    pipe = Node(i * n + j + 1, (i + 1) * n + j)
+                    pipe = Pipe(i * n + j + 1, (i + 1) * n + j)
                 case "S":
                     start = (
                         i * n + j,
-                        Node(*get_start_pipe_boundaries(matrix, i, j)),
+                        Pipe(*get_start_pipe_boundaries(matrix, i, j)),
                     )
                 case _:
                     # We have to append non-pipes to make the unidimensional matrix work
-                    pipe = Node(-1, -1)
+                    pipe = Pipe(-1, -1)
             pipes.append(pipe)
 
     return start, pipes
