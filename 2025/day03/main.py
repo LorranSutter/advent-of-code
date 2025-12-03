@@ -89,7 +89,7 @@ def pop_smaller_digits(
         # Prevents replacing more digits than available remaining battery digits
         if num_digits - i > remaining_battery_digits:
             break
-        # Stops if we find a smaller digit
+        # Stops if we find a greater digit
         if digit <= max_joltages[i]:
             break
         # Guarantees the next digit will always be smaller
