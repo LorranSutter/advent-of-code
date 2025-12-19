@@ -2,11 +2,14 @@ import os
 import math
 import collections
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input_sample"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     arr = read_file()
 
@@ -30,6 +33,7 @@ def part1():
     print("Total stones:", len(arr))
 
 
+@timer
 def part2():
     arr = read_file()
     known_stones = collections.defaultdict(lambda: None)
@@ -66,6 +70,7 @@ def part2():
     print("Total stones:", len(arr))
 
 
+@timer
 def part2_2():
     arr = read_file()
     known_stones = collections.defaultdict(lambda: None)

@@ -1,10 +1,13 @@
 import os
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     A, B, C, program = read_file()
 
@@ -25,6 +28,7 @@ def part1():
     print("Output:", ",".join(output))
 
 
+@timer
 def part2():
     A, B_initial, C_initial, program = read_file()
 
@@ -46,14 +50,14 @@ def part2():
             if len(output) > len(biggest_output):
                 biggest_output = output
         if A_initial % 1000 == 0:
-            print(A_initial,output,biggest_output)
+            print(A_initial, output, biggest_output)
         if output == program:
             break
         else:
             for i in range(len(output)):
                 if output[i] != program[i]:
                     A_initial += 8
-                    A  = A_initial
+                    A = A_initial
                     B, C = B_initial, C_initial
                     pointer = 0
                     output = []

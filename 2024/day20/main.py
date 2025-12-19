@@ -1,5 +1,7 @@
 import os
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input_sample"
 abs_file_path = os.path.join(script_dir, rel_path)
@@ -17,6 +19,7 @@ class bcolors:
     UNDERLINE = "\033[4m"
 
 
+@timer
 def part1():
     grid, start, end = read_file()
 
@@ -26,6 +29,7 @@ def part1():
     print("Number of cheats less than minimum:", num_lt_min_save)
 
 
+@timer
 def part2():
     grid, start, end = read_file()
 

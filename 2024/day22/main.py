@@ -1,11 +1,14 @@
 import os
 import collections
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     secrets = read_file()
     it = 2000
@@ -24,6 +27,7 @@ def part1():
     print("Sum", s)
 
 
+@timer
 def part2():
     secrets = read_file()
     it = 2000

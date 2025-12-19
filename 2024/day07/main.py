@@ -1,11 +1,14 @@
 import os
 import itertools
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     op_combinations = {}
     s = 0
@@ -20,6 +23,7 @@ def part1():
     print("Total calibration result:", s)
 
 
+@timer
 def part2():
     op_combinations = {}
     s = 0

@@ -1,10 +1,13 @@
 import os
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     adjacent_matrix = read_file()
     cycles = dummy_cycle_3(adjacent_matrix)
@@ -12,6 +15,7 @@ def part1():
     print("Cycles with t", len(cycles))
 
 
+@timer
 def part2():
     adjacent_matrix = read_file()
     largest_clique = get_largest_clique(adjacent_matrix)

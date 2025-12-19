@@ -2,6 +2,8 @@ import os
 from typing import List
 from dataclasses import dataclass
 
+from utils.timer import timer
+
 
 @dataclass
 class Gate:
@@ -16,6 +18,7 @@ rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     wires, gates = read_file()
     simulate(wires, gates)
@@ -24,6 +27,7 @@ def part1():
     print("Output:", output)
 
 
+@timer
 def part2():
     pass
 

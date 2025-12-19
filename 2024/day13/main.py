@@ -2,11 +2,14 @@ import os
 import re
 import math
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     buttons_a, buttons_b, prizes = read_file()
 
@@ -21,6 +24,7 @@ def part1():
     print("Tokens spend:", tokens_spend)
 
 
+@timer
 def part2():
     buttons_a, buttons_b, prizes = read_file()
     shift = 10000000000000

@@ -1,10 +1,13 @@
 import os
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     topo_map, starts, ends = generate_topo_map_with_borders()
 
@@ -16,6 +19,7 @@ def part1():
     print("Sum of tailhead scores:", s)
 
 
+@timer
 def part2():
     topo_map, starts, _ = generate_topo_map_with_borders()
 
@@ -27,13 +31,13 @@ def part2():
 
 
 def generate_topo_map_with_borders():
-    '''
+    """
     -1 -1 -1 -1
     -1  0  1 -1
     ...
     -1  9  8 -1
     -1 -1 -1 -1
-    '''
+    """
     m = []
     starts = []
     ends = []

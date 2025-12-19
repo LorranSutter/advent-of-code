@@ -1,10 +1,13 @@
 import os
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     antennas, size = get_antennas_map()
     antinodes = []
@@ -17,6 +20,7 @@ def part1():
     print("Unique antinode locations:", len(antinodes))
 
 
+@timer
 def part2():
     antennas, size = get_antennas_map()
     antinodes = []

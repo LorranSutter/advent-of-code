@@ -1,10 +1,13 @@
 import os
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     chart, initial_pos = read_file()
     chart[initial_pos[0]][initial_pos[1]] = "X"
@@ -13,6 +16,7 @@ def part1():
     print("Distinct positions visited:", positions)
 
 
+@timer
 def part2():
     chart, initial_pos = read_file()
 

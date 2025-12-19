@@ -1,11 +1,14 @@
 import os
 import re
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     s = 0
     with open(abs_file_path) as f:
@@ -18,6 +21,7 @@ def part1():
     print("Sum:", s)
 
 
+@timer
 def part2():
     s = 0
     with open(abs_file_path) as f:

@@ -1,10 +1,13 @@
 import os
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     locks, keys = read_file(5)
 
@@ -18,6 +21,7 @@ def part1():
     print(fit(locks, keys, 5))
 
 
+@timer
 def part2():
     pass
 
@@ -29,7 +33,7 @@ def read_file(size: int):
 
         for schematic in schematics:
             schematic = schematic.split("\n")
-            
+
             heights = [-1 for _ in range(size)]
             for line in schematic:
                 for i in range(size):

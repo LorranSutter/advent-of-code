@@ -1,11 +1,14 @@
 import os
 import collections
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     grid = generate_grid_with_borders()
     regions = get_regions(grid)
@@ -14,6 +17,7 @@ def part1():
     print("Total price:", total_price)
 
 
+@timer
 def part2():
     grid = generate_grid_with_borders()
     regions = get_regions(grid)
@@ -123,38 +127,38 @@ def calculate_region_price_2(region):
 
     sides = 0
     for x, y in region:
-        '''
+        """
         * * * *
         * |   *
         * A A *
-        '''
+        """
         if not visited[((x + 1, y), (1, 0))] and (x + 1, y) not in region:
             sides += 1
             visit(region, visited, (x, y), (0, 1), (1, 0))
             visit(region, visited, (x, y - 1), (0, -1), (1, 0))
-        '''
+        """
         * * * *
         * A A *
         * |   *
-        '''
+        """
         if not visited[((x - 1, y), (-1, 0))] and (x - 1, y) not in region:
             sides += 1
             visit(region, visited, (x, y), (0, 1), (-1, 0))
             visit(region, visited, (x, y - 1), (0, -1), (-1, 0))
-        '''
+        """
         * * * *
         * A - *
         * A   *
-        '''
+        """
         if not visited[((x, y + 1), (0, 1))] and (x, y + 1) not in region:
             sides += 1
             visit(region, visited, (x, y), (1, 0), (0, 1))
             visit(region, visited, (x - 1, y), (-1, 0), (0, 1))
-        '''
+        """
         * * * *
         * - A *
         *   A *
-        '''
+        """
         if not visited[((x, y - 1), (0, -1))] and (x, y - 1) not in region:
             sides += 1
             visit(region, visited, (x, y), (1, 0), (0, -1))

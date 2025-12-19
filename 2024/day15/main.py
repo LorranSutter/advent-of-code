@@ -2,6 +2,8 @@ import os
 from typing import Tuple
 from dataclasses import dataclass
 
+from utils.timer import timer
+
 
 class bcolors:
     HEADER = "\033[95m"
@@ -26,6 +28,7 @@ rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     robot, grid, moves = read_file()
 
@@ -38,6 +41,7 @@ def part1():
     print("Sum of GPS coordinates:", s)
 
 
+@timer
 def part2():
     robot, grid, moves = read_file(True)
 
@@ -95,6 +99,7 @@ def read_file(remap=False):
             moves.extend([directions[m] for m in line.rstrip("\n")])
 
     return robot, grid, moves
+
 
 def print_grid_1(grid):
     for i in range(len(grid)):

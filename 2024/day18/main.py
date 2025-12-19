@@ -1,5 +1,7 @@
 import os
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
@@ -8,6 +10,7 @@ size = 71 if rel_path == "input" else 7
 limit = 1024 if rel_path == "input" else 12
 
 
+@timer
 def part1():
     start = (0, 0)
     grid = read_file(size, limit)
@@ -23,6 +26,7 @@ def part1():
     print("Minimum number of steps:", steps)
 
 
+@timer
 def part2():
     corrupted = read_file_2()
     len_corrupted = len(corrupted)
@@ -40,8 +44,8 @@ def part2():
             low = mid + 1
         else:
             high = mid - 1
-    
-    print("First byte to prevent exit",corrupted[mid-1])
+
+    print("First byte to prevent exit", corrupted[mid - 1])
 
 
 def read_file(size, limit):

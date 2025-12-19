@@ -1,11 +1,14 @@
 import os
 import collections
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     rules = collections.defaultdict(lambda: [])
     updates = []
@@ -29,6 +32,7 @@ def part1():
     print("Sum middle pages:", s_mid_pages)
 
 
+@timer
 def part2():
     rules = collections.defaultdict(lambda: [])
     updates = []

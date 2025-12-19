@@ -1,10 +1,13 @@
 import os
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     with open(abs_file_path) as f:
         matrix = []
@@ -21,6 +24,7 @@ def part1():
     print("Total XMAS:", xmas_count)
 
 
+@timer
 def part2():
     with open(abs_file_path) as f:
         matrix = []

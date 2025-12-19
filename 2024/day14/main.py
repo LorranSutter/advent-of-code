@@ -2,6 +2,8 @@ import os
 import re
 import math
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
@@ -10,6 +12,7 @@ size_input = (103, 101)
 size_sample = (7, 11)
 
 
+@timer
 def part1():
     seconds = 100
     size = size_input if rel_path == "input" else size_sample
@@ -32,13 +35,14 @@ def part1():
     print("Safety factor:", safety_factor)
 
 
+@timer
 def part2():
-    '''
+    """
     Checks if there is at least one robot next to another
     Sum up all robots that are close
     The greatest sum is likely to have the cristmas tree
     Not the most optimal way
-    '''
+    """
     size = size_input if rel_path == "input" else size_sample
     positions, velocities = read_file()
 

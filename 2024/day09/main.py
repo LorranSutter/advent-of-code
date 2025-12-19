@@ -2,6 +2,8 @@ import os
 from typing import List
 from dataclasses import dataclass
 
+from utils.timer import timer
+
 
 @dataclass
 class File:
@@ -20,6 +22,7 @@ rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     disk_map = read_file()
     total_num_files = count_files(disk_map)
@@ -30,6 +33,7 @@ def part1():
     print("File systeam checksum:", checksum)
 
 
+@timer
 def part2():
     disk_map = read_file()
     spaces = build_array(disk_map)
@@ -68,7 +72,8 @@ def build_array(disk_map):
 
     return spaces
 
-def compact_files(spaces):    
+
+def compact_files(spaces):
     spaces_array_size = len(spaces)
     for i, chunk in enumerate(spaces[::-2]):
         chunk_size = chunk.files[0].num_files
@@ -125,9 +130,8 @@ def calculate_checksum_2(spaces):
                 checksum += file.ID * file_counting
                 file_counting += 1
         file_counting += space.free
-    
-    return checksum
 
+    return checksum
 
 
 def print_disk(file_array, disk_array):

@@ -1,10 +1,13 @@
 import os
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     patterns, designs = read_file()
     print(patterns)
@@ -24,6 +27,7 @@ def part1():
     print("Possible designs:", count)
 
 
+@timer
 def part2():
     pass
 
@@ -73,6 +77,7 @@ def read_file():
 #             return True
 #     return False
 
+
 def is_design_possible_3(design, patterns):
     # print(design)
     # input()
@@ -83,11 +88,12 @@ def is_design_possible_3(design, patterns):
 
     for i in range(size):
         # print(design[:i+1])
-        if design[:i+1] in patterns:
-            if i == len(design)-1:
+        if design[: i + 1] in patterns:
+            if i == len(design) - 1:
                 return True
-            if is_design_possible_3(design[i+1:], patterns):
+            if is_design_possible_3(design[i + 1 :], patterns):
                 return True
     return False
+
 
 part1()

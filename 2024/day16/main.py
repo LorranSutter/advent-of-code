@@ -1,12 +1,14 @@
 import os
 import math
 import collections
-
 from dataclasses import dataclass
+
+from utils.timer import timer
 
 script_dir = os.path.dirname(__file__)
 rel_path = "input_sample"
 abs_file_path = os.path.join(script_dir, rel_path)
+
 
 @dataclass
 class Node:
@@ -14,6 +16,7 @@ class Node:
     vertex: tuple
 
 
+@timer
 def part1():
     grid, path, start, end = read_file()
     print(path)
@@ -56,6 +59,7 @@ def part1():
     print("Lowest score:", s, count)
 
 
+@timer
 def part2():
 
     print("Sum of GPS coordinates:")
