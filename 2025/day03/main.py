@@ -1,6 +1,8 @@
 import os
 from typing import List, Tuple
 
+from utils.timer import timer
+
 
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
@@ -28,6 +30,7 @@ Example:
 """
 
 
+@timer
 def part1():
     batteries = parse_file()
 
@@ -47,6 +50,7 @@ def part1():
     print("Total output joltage:", total_joltage)
 
 
+@timer
 def part2():
     batteries = parse_file()
     num_digits = 12
@@ -81,10 +85,10 @@ def pop_smaller_digits(
     num_digits: int,
     remaining_battery_digits: int,
 ) -> int:
-    '''
+    """
     Remove smaller digits until we reach the first position
     Returns the index of the joltage that can be replaced
-    '''
+    """
     for i in range(current_joltage_id, -1, -1):
         # Prevents replacing more digits than available remaining battery digits
         if num_digits - i > remaining_battery_digits:

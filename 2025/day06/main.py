@@ -1,6 +1,8 @@
 import os
 from typing import List, Tuple
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
@@ -34,6 +36,7 @@ Part 2:
 """
 
 
+@timer
 def part1():
     nums, ops = parse_file_1()
     len_col = len(nums)
@@ -52,6 +55,7 @@ def part1():
     print("Grand total", grant_total)
 
 
+@timer
 def part2():
     rows, ops = parse_file_2()
     grant_total = 0

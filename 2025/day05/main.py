@@ -1,6 +1,8 @@
 import os
 from typing import List, Tuple
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
@@ -18,6 +20,7 @@ Part 2:
 """
 
 
+@timer
 def part1():
     ranges, ids = parse_file()
     fresh_ingredients = 0
@@ -31,6 +34,7 @@ def part1():
     print("Number of fresh ingredients", fresh_ingredients)
 
 
+@timer
 def part2():
     ranges, _ = parse_file()
     fresh_ingredients = 0
@@ -47,7 +51,7 @@ def part2():
             if i == j:
                 j += 1
                 continue
-            
+
             ok, new_range = merge_ranges(ranges[i], ranges[j])
             if ok:
                 ranges[i] = new_range
@@ -58,7 +62,7 @@ def part2():
         i += 1
 
     # +1 because both ends are inclusive
-    fresh_ingredients = sum([interval[1]-interval[0]+1 for interval in ranges])
+    fresh_ingredients = sum([interval[1] - interval[0] + 1 for interval in ranges])
 
     print("Number of fresh ingredients", fresh_ingredients)
 

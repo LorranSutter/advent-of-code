@@ -2,6 +2,8 @@ import os
 from enum import Enum
 from typing import List
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
@@ -56,6 +58,7 @@ diagram_to_num = {
 }
 
 
+@timer
 def part1():
     grid = parse_file()
 
@@ -72,6 +75,7 @@ def part1():
     print("Total splits:", splits)
 
 
+@timer
 def part2():
     grid = parse_file()
 

@@ -1,5 +1,7 @@
 import os
 
+from utils.timer import timer
+
 
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
@@ -39,6 +41,7 @@ And we can save some computation with this approach:
 """
 
 
+@timer
 def part1():
     ids_range = parse_file()
     total = 0
@@ -57,6 +60,7 @@ def part1():
     print("Sum of invalid IDs:", total)
 
 
+@timer
 def part2():
     ids_range = parse_file()
 

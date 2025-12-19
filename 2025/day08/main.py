@@ -5,6 +5,8 @@ from typing import List, Tuple, Set
 
 import matplotlib.pyplot as plt
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
@@ -35,6 +37,7 @@ class Distance:
     v2: Tuple[int]
 
 
+@timer
 def part1():
     boxes = parse_file()
 
@@ -72,6 +75,7 @@ def part1():
     # plot_boxes(boxes, circuits)
 
 
+@timer
 def part2():
     boxes = parse_file()
 

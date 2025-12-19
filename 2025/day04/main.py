@@ -1,6 +1,8 @@
 import os
 from typing import List, Tuple
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
@@ -31,6 +33,7 @@ sys.setrecursionlimit(10000)
 """
 
 
+@timer
 def part1():
     rows, cols, rolls = parse_file()
     max_adj_rolls = 4
@@ -55,6 +58,7 @@ def part1():
     print("Total accessible rolls:", accessible_rolls)
 
 
+@timer
 def part2():
     rows, cols, rolls = parse_file()
     max_adj_rolls = 4
@@ -72,7 +76,7 @@ def part2():
 
     for row in rolls:
         print("".join(row))
-    
+
     print("Total removed rolls:", removed_rolls)
 
 

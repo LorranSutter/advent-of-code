@@ -1,5 +1,6 @@
 import os
-from typing import List
+
+from utils.timer import timer
 
 
 script_dir = os.path.dirname(__file__)
@@ -20,6 +21,7 @@ Part 2:
 """
 
 
+@timer
 def part1():
     rotations = parse_file()
 
@@ -32,6 +34,7 @@ def part1():
     print("Password:", count)
 
 
+@timer
 def part2():
     rotations = parse_file()
 
