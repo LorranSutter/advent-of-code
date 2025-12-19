@@ -39,17 +39,21 @@ cat > "$folder_name/main.py" << 'EOF'
 import os
 from typing import Tuple
 
+from utils.timer import timer
+
 """
 Explanation
 """
 
 
+@timer
 def part1():
     # TODO: Implement part 1
     lines = parse_file("input_sample.txt")
     pass
 
 
+@timer
 def part2():
     # TODO: Implement part 2
     lines = parse_file("input_sample.txt")
