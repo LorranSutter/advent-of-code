@@ -2,6 +2,8 @@ import os
 from typing import List, Tuple
 from dataclasses import dataclass
 
+from utils.timer import timer
+
 
 @dataclass
 class Pipe:
@@ -26,7 +28,7 @@ script_dir = os.path.dirname(__file__)
 rel_path = "input_sample.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
 
-
+@timer
 def part1():
     """
     Reads the whole matrix
@@ -67,7 +69,7 @@ def part1():
 
     print("Steps to farthest point:", steps)
 
-
+@timer
 def part2():
     """
     Reads the whole matrix

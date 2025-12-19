@@ -1,6 +1,8 @@
 import os
 from typing import List
 
+from utils.timer import timer
+
 
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
@@ -20,6 +22,7 @@ Part 2
 """
 
 
+@timer
 def part1():
     histories = parse_file()
 
@@ -42,6 +45,7 @@ def part1():
     print("Sum extrapolated values:", total_new_values)
 
 
+@timer
 def part2():
     histories = parse_file()
 

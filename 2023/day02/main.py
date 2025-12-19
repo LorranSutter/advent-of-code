@@ -1,10 +1,13 @@
 import os
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     games = read_file()
 
@@ -25,6 +28,7 @@ def part1():
     print("Sum possible games:", valid_games)
 
 
+@timer
 def part2():
     games = read_file()
 
@@ -49,15 +53,19 @@ def read_file():
     with open(abs_file_path) as f:
         for line in f:
             line = line.rstrip("\n").split(":")
-            line = line[1]  # only games (3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green)
-            line_games = line.split(";")  # separate games [[3 blue, 4 red], [1 red, 2 green, 6 blue], [2 green]]
+            line = line[
+                1
+            ]  # only games (3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green)
+            line_games = line.split(
+                ";"
+            )  # separate games [[3 blue, 4 red], [1 red, 2 green, 6 blue], [2 green]]
 
             new_set_game = []
             for game in line_games:
-                game = game.split(",") # [[3 blue], [4 red]]
+                game = game.split(",")  # [[3 blue], [4 red]]
                 new_game = [0 for _ in range(3)]
                 for cubes in game:
-                    cubes = cubes.strip().split(" ") # [3,blue]
+                    cubes = cubes.strip().split(" ")  # [3,blue]
                     if cubes[1] == "red":
                         new_game[0] = int(cubes[0])
                     if cubes[1] == "green":

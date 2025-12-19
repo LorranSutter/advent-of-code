@@ -3,6 +3,8 @@ import math
 from typing import List, Tuple
 from dataclasses import dataclass
 
+from utils.timer import timer
+
 
 @dataclass
 class Maps:
@@ -23,6 +25,7 @@ rel_path = "input_sample.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     seeds, categories = parse_file()
     lowest = math.inf
@@ -43,6 +46,7 @@ def part1():
 
 # 324930166 Too high
 # 262615889 Too high
+@timer
 def part2():
     seeds, categories = parse_file()
 

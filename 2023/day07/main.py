@@ -3,6 +3,8 @@ from typing import List
 from collections import Counter
 from dataclasses import dataclass
 
+from utils.timer import timer
+
 
 @dataclass
 class Hand:
@@ -44,6 +46,7 @@ Make a modified sorting algorithm
 """
 
 
+@timer
 def part1():
     hands = parse_file()
     hands = list(map(classify_hand, hands))
@@ -57,6 +60,7 @@ def part1():
     print("Total winnings:", total_winnings)
 
 
+@timer
 def part2():
     hands = parse_file()
     hands = list(map(lambda hand: classify_hand(hand, with_joker=True), hands))

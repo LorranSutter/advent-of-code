@@ -1,10 +1,13 @@
 import os
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     calibrations = read_file()
     nums = set(["1", "2", "3", "4", "5", "6", "7", "8", "9"])
@@ -31,6 +34,7 @@ def part1():
     print("Total calibration value:", total)
 
 
+@timer
 def part2():
     calibrations = read_file()
     nums = set(["1", "2", "3", "4", "5", "6", "7", "8", "9"])
@@ -66,7 +70,7 @@ def part2():
     for numText in numsTextTowards.keys():
         for i in range(len(numText)):
             numsTextPartialTowards.add(numText[:i])
-            numsTextPartialBackwards.add(numText[len(numText)-1:i:-1])
+            numsTextPartialBackwards.add(numText[len(numText) - 1 : i : -1])
 
     total = 0
     for calibration in calibrations:

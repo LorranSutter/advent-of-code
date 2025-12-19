@@ -2,6 +2,8 @@ import os
 import re
 from typing import List, Tuple
 
+from utils.timer import timer
+
 
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
@@ -24,6 +26,7 @@ and ends being greater than the record
 """
 
 
+@timer
 def part1():
     times, records = parse_file()
     times = tuple(map(int, times))
@@ -37,6 +40,7 @@ def part1():
     print("Number of ways to beat the record:", total)
 
 
+@timer
 def part2():
     times, records = parse_file()
     time = int("".join(times))

@@ -5,6 +5,8 @@ from itertools import cycle
 from typing import Dict, Tuple
 from dataclasses import dataclass
 
+from utils.timer import timer
+
 
 @dataclass
 class Node:
@@ -26,6 +28,7 @@ rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     """
     Read instructions as string
@@ -39,15 +42,17 @@ def part1():
     instructions, nodes = parse_file()
 
     steps = 0
-    current_node = 'AAA'
+    current_node = "AAA"
     for instruction in cycle(instructions):
-        if current_node == 'ZZZ':
+        if current_node == "ZZZ":
             break
         steps += 1
         current_node = nodes[current_node][instruction]
 
     print("Total steps:", steps)
 
+
+@timer
 def part2():
     """
     Read instructions as string
@@ -68,13 +73,13 @@ def part2():
     of each starting node
     """
     instructions, nodes = parse_file()
-    starts = [node for node in nodes.keys() if node[-1] == 'A']
+    starts = [node for node in nodes.keys() if node[-1] == "A"]
 
-    steps_to_z = [0 for _ in range(len(starts))] 
+    steps_to_z = [0 for _ in range(len(starts))]
 
     for i, current_node in enumerate(starts):
         for instruction in cycle(instructions):
-            if current_node[-1] == 'Z':
+            if current_node[-1] == "Z":
                 break
             steps_to_z[i] += 1
             current_node = nodes[current_node][instruction]

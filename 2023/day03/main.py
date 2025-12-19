@@ -2,11 +2,14 @@ import os
 from typing import List, Tuple, Dict
 from collections import defaultdict
 
+from utils.timer import timer
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     """
     Read each line
@@ -34,6 +37,7 @@ def part1():
     print("Sum of adjacent numbers:", sum_nums)
 
 
+@timer
 def part2():
     """
     Read each line
@@ -43,7 +47,7 @@ def part2():
     After scanning the whole grid, calculate gear ratios reading the read dict
     """
 
-    grid = read_file()    
+    grid = read_file()
     n, m = len(grid), len(grid[0])
     nums = set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
 

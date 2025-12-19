@@ -3,6 +3,8 @@ import re
 from typing import List
 from dataclasses import dataclass
 
+from utils.timer import timer
+
 
 @dataclass
 class Card:
@@ -15,6 +17,7 @@ rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 
+@timer
 def part1():
     cards = read_file()
 
@@ -31,6 +34,7 @@ def part1():
     print("Total card points:", total_points)
 
 
+@timer
 def part2():
     """
     Create a list to keep track of how many copies of each card
