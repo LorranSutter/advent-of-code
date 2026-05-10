@@ -16,7 +16,6 @@ Each year/README.md is managed between <!-- SUMMARY:START --> and
 (like the title) is preserved after the first run.
 """
 
-import os
 import re
 from pathlib import Path
 
