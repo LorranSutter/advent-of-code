@@ -48,6 +48,7 @@ def part1():
 # 262615889 Too high
 @timer
 def part2():
+    # TODO Implement part 2
     seeds, categories = parse_file()
 
     seed_ranges = []

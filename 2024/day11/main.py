@@ -35,6 +35,7 @@ def part1():
 
 @timer
 def part2():
+    # TODO Implement part 2
     arr = read_file()
     known_stones = collections.defaultdict(lambda: None)
     known_stones[0] = [1]

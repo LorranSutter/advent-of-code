@@ -71,6 +71,7 @@ def part1():
 
 @timer
 def part2():
+    # TODO Implement part 2
     """
     Reads the whole matrix
     Parse the matrix to unidimensional array of adjacent pipes

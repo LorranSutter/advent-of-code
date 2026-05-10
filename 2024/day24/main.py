@@ -29,6 +29,7 @@ def part1():
 
 @timer
 def part2():
+    # TODO Implement part 2
     pass
 
 
