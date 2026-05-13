@@ -23,7 +23,7 @@ def part1():
     total_load = 0
     for j in range(width):
         load = height
-        for i in range(len(platform)):
+        for i in range(height):
             if platform[i][j] == "O":
                 total_load += load
                 load -= 1
