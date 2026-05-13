@@ -18,16 +18,17 @@ Part 2:
 @timer
 def part1():
     platform = parse_file("input.txt")
+    width, height = len(platform), len(platform[0])
 
     total_load = 0
-    for j in range(len(platform[0])):
-        max_load = len(platform[0])
+    for j in range(width):
+        load = height
         for i in range(len(platform)):
             if platform[i][j] == "O":
-                total_load += max_load
-                max_load -= 1
+                total_load += load
+                load -= 1
             elif platform[i][j] == "#":
-                max_load = len(platform[0]) - i - 1
+                load = height - i - 1
     
     print(f"Total load: {total_load}")
 
