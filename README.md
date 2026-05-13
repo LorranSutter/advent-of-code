@@ -5,7 +5,7 @@ This repository contains my solutions for the [Advent of Code](https://adventofc
 Advent of Code is an annual coding challenge that runs from December 1st to December 25th, featuring daily programming puzzles of varying difficulty.
 
 <!-- SUMMARY:START -->
-## Progress
+## 📊 Progress
 
 > **Overall: 90/96 parts solved (94%)**
 
@@ -23,8 +23,41 @@ Advent of Code is an annual coding challenge that runs from December 1st to Dece
 
 <!-- SUMMARY:END -->
 
+## 🛠️ Setup
 
-## Creating a New Puzzle
+### Creating a Virtual Environment
+
+```bash
+python3 -m venv .venv
+```
+
+### Activating the Virtual Environment
+
+On macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+On Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+### Installing Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Deactivating the Virtual Environment
+
+```bash
+deactivate
+```
+
+## ✨ Creating a New Puzzle
 
 To create a new puzzle structure, use the `new_puzzle.sh` script:
 
@@ -43,7 +76,7 @@ This will create:
 - `input.txt` for the puzzle input
 - `input_sample.txt` for sample/test input
 
-## Running Solutions
+## 🚀 Running Solutions
 
 You can run the solutions in two ways:
 
@@ -60,7 +93,7 @@ python3 ./2025/day01/main.py
 
 Replace `2025` with the desired year and `day01` with the specific day you want to run.
 
-## Updating Progress Summary
+## 🔄 Updating Progress Summary
 
 To update the progress summary in this README after solving new parts, run the `generate_readme.py` script:
 
