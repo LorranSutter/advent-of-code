@@ -85,7 +85,7 @@ def check_parts(main_file: Path) -> dict:
 def generate_root_summary(results: dict) -> str:
     """Generates the root README summary with progress bars per year."""
     lines = []
-    lines.append("## Progress")
+    lines.append("## 📊 Progress")
     lines.append("")
 
     total_solved = 0
