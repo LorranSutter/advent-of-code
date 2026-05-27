@@ -1,5 +1,7 @@
 # 🎄 Advent of Code
 
+[![Dashboard](https://img.shields.io/badge/Dashboard-coding--challenges-blue)](https://github.com/LorranSutter/coding-challenges)
+
 This repository contains my solutions for the [Advent of Code](https://adventofcode.com/) event.
 
 Advent of Code is an annual coding challenge that runs from December 1st to December 25th, featuring daily programming puzzles of varying difficulty.
@@ -7,11 +9,11 @@ Advent of Code is an annual coding challenge that runs from December 1st to Dece
 <!-- SUMMARY:START -->
 ## 📊 Progress
 
-> **Overall: 95/100 parts solved (95%)**
+> **Overall: 97/104 parts solved (93%)**
 
 ### [2023](./2023/)
 
-`███████████████████░` **28/30** parts solved (93%)
+`██████████████████░░` **30/34** parts solved (88%)
 
 ### [2024](./2024/)
 

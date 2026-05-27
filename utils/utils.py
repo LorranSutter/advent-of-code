@@ -26,6 +26,9 @@ class tcolors:
     WHITE = "\33[37m"
     RESET = "\033[0m"
 
+def print_grid(grid: List[List[str | int | float]], spacer: str = " "):
+    for row in grid:
+        print(spacer.join(str(cell) for cell in row))
 
 def add(v1: List[int] | Tuple[int], v2: List[int] | Tuple[int]):
     return (v1[0] + v2[0], v1[1] + v2[1])
