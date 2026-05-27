@@ -47,6 +47,7 @@ def try_toggle(schematic, size):
 
 def part2():
     # TODO: Implement part 2
+    # This is a Linear Algebra problem. Just have to create the right model and implement it
     pass
 
 
