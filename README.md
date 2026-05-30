@@ -9,11 +9,11 @@ Advent of Code is an annual coding challenge that runs from December 1st to Dece
 <!-- SUMMARY:START -->
 ## 📊 Progress
 
-> **Overall: 97/106 parts solved (92%)**
+> **Overall: 98/106 parts solved (92%)**
 
 ### [2023](./2023/)
 
-`█████████████████░░░` **31/36** parts solved (86%)
+`██████████████████░░` **32/36** parts solved (89%)
 
 ### [2024](./2024/)
 
