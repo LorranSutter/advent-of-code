@@ -3,23 +3,45 @@ from typing import List
 
 from utils.timer import timer
 
+"""
+Preprocessing:
+- Read the input file and parse each line into a list of integers
+
+Part 1:
+- For each history, generate sequences of differences between consecutive values
+- Continue generating difference sequences until all values in a sequence are equal
+  (we don't need to reach all zeros, just all equal values)
+- During each iteration, store the last value of the sequence
+- Once we reach a sequence with all equal values, sum all the stored last values
+- This sum represents the next extrapolated value for that history
+- Sum all extrapolated values across all histories
+
+    Example visualization:
+        0   3   6   9  12  15  [18]  <- Sum of last values: 15 + 3 + 0 = 18
+          3   3   3   3   3   [3]
+            0   0   0   0   [0]
+
+Part 2:
+- Similar to Part 1, but we extrapolate backwards instead of forwards
+- For each history, generate the same sequences of differences
+- During each iteration, store the first value of the sequence instead of the last
+- Once we reach a sequence with all equal values, work backwards through the stored first values
+- Calculate the previous value by subtracting: new_value = first_value - new_value
+- This gives us the extrapolated value to the left of the original history
+- Sum all extrapolated values across all histories
+
+    Example visualization:
+        [5]  10  13  16  21  30  45  <- Working backwards: 10 - (3 - (-2 - (2 - 0))) = 5
+          [5]   3   3   5   9  15
+            [-2]  0   2   4   6
+              [2]  2   2   2
+                [0]  0   0
+"""
+
 
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
-
-"""
-No big deal here, maybe there is a more efficient way I don't see
-For each history, just take de difference of sequencial pairs
-Repeat untill all result values are equal (Don't have to reach the 0 row)
-For each iteration store the last value for part 1 and first value for part 2
-
-Iterate over the stored values
-Part 1
-    Sum all last values
-Part 2
-    Sum the diff between last value and current value
-"""
 
 
 @timer
@@ -91,3 +113,4 @@ def parse_file() -> List[List[int]]:
 
 
 part1()
+part2()
