@@ -4,6 +4,26 @@ from collections import defaultdict
 
 from utils.timer import timer
 
+"""
+Preprocessing:
+- Read the 2D engine schematic grid from the input file
+- Pad the grid with an extra border of periods (`.`) on all sides (top, bottom, left, and right)
+  to make neighborhood checks simpler and avoid index out of bounds errors
+
+Part 1:
+- Scan each line of the grid to identify consecutive digits that form numbers
+- For each number found, check all 8-way neighboring cells surrounding the characters of the number
+- If at least one neighboring cell contains a symbol (any character other than a digit or `.`), classify it as a valid part number
+- Sum all valid part numbers and print the total
+
+Part 2:
+- Scan the schematic grid to find numbers in the same manner as Part 1
+- For each number, check if any adjacent neighboring cell is a gear symbol (`*`)
+- Keep a dictionary mapping each gear's coordinate `(row, col)` to a list of adjacent part numbers
+- After scanning, find all gears that are adjacent to exactly two part numbers
+- Multiply those two numbers to get the gear ratio, sum all gear ratios, and print the total
+"""
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
@@ -11,13 +31,6 @@ abs_file_path = os.path.join(script_dir, rel_path)
 
 @timer
 def part1():
-    """
-    Read each line
-    When a number is found, continue until detect the whole number
-    Search around of a symbol
-    Add the number if symbol is found
-    """
-
     grid = read_file()
     n, m = len(grid), len(grid[0])
     nums = set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
@@ -39,14 +52,6 @@ def part1():
 
 @timer
 def part2():
-    """
-    Read each line
-    When a number is found, continue until detect the whole number
-    Search around of a gear symbol ('*')
-    Add gear position to the gear dict with adjacent numbers
-    After scanning the whole grid, calculate gear ratios reading the read dict
-    """
-
     grid = read_file()
     n, m = len(grid), len(grid[0])
     nums = set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
@@ -70,11 +75,6 @@ def part2():
             sum_gear_ratios += gear_map[gear_pos][0] * gear_map[gear_pos][1]
 
     print("Sum all gear ratios:", sum_gear_ratios)
-
-
-def print_grid(grid):
-    for line in grid:
-        print("".join(line))
 
 
 def is_adjacent_to_symbol(
@@ -137,4 +137,5 @@ def read_file() -> List[List[str]]:
     return grid
 
 
+part1()
 part2()

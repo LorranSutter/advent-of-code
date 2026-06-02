@@ -2,6 +2,23 @@ import os
 
 from utils.timer import timer
 
+"""
+Preprocessing:
+- Read the input file, parsing each line to split the game ID and the game sets/subsets
+- Subsets are separated by semicolons (`;`) and individual color counts are separated by commas (`,`)
+- Map each subset to a structured list representing red, green, and blue cube counts: `[red, green, blue]`
+
+Part 1:
+- Given target bag limits of 12 red, 13 green, and 14 blue cubes, check each game
+- A game is valid if all its subsets have red, green, and blue counts within their respective limits
+- Sum the 1-based IDs of all valid/possible games and print the total
+
+Part 2:
+- For each game, determine the minimum set of cubes needed to make the game possible (the maximum count seen for each color across all subsets in the game)
+- Calculate the power of this set by multiplying the minimum red, green, and blue counts (Red × Green × Blue)
+- Sum these power values across all games and print the total
+"""
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
@@ -80,4 +97,5 @@ def read_file():
     return games
 
 
+part1()
 part2()

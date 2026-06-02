@@ -4,26 +4,27 @@ from typing import List, Tuple
 
 from utils.timer import timer
 
+"""
+Preprocessing:
+- Read the input file to parse the list of race durations and record distances
+- Duration and record values are separated by spaces under 'Time:' and 'Distance:' lines
+
+Part 1:
+- For each race, determine how many ways the boat can beat the record distance
+- Holding the button for ms milliseconds charges the boat speed to ms millimeters/millisecond, and the boat moves for the remaining (time - ms) milliseconds
+- The distance travelled is: d = ms * (time - ms)
+- Find the lower and upper bounds of holding times that exceed the record by scanning from the beginning and end respectively
+- Multiply the number of winning ways ($end - start + 1$) for all races together and print the product
+
+Part 2:
+- Concatenate the individual numbers of the input (times and records) to form a single, much larger race
+- Perform the same search for lower and upper bounds of winning holding times, calculate the total ways to beat the record, and print the result
+"""
+
 
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
-
-
-"""
-Since we can't count the ms spent holding the button,
-the recordance travelled can be calculated as 
-    d = remaining_time * button_held_time
-
-This gives us a curve of recordance travelled
-We just have to find when this curve starts
-and ends being greater than the record
-
-3 Solutions
- 1. Iterate from beginning and end until find the limits
- 2. Same as before, but with a binary search
- 3. Find the roots of the curve described above
-"""
 
 
 @timer
@@ -78,4 +79,5 @@ def parse_file() -> Tuple[List[str], List[str]]:
     return times, records
 
 
+part1()
 part2()

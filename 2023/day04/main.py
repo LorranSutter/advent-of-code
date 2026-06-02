@@ -5,6 +5,24 @@ from dataclasses import dataclass
 
 from utils.timer import timer
 
+"""
+Preprocessing:
+- Read each line representing a scratchcard, strip the "Card X:" prefix, and split on the vertical bar (`|`)
+- Split the numbers on each side by whitespace to separate the set of winning numbers from the list of numbers we have
+- Store these sets/lists using the `Card` dataclass
+
+Part 1:
+- For each card, calculate the count of numbers we have that are also in the winning numbers set
+- If the card has N > 0 matches, the point value is 2^{N-1}
+- Sum the points across all scratchcards and print the total
+
+Part 2:
+- Maintain an array `cards_count` initialized to 1 for each card to keep track of the total copies of each card we own
+- For each card i, count how many winning matches N it has
+- Add the quantity of the current card (stored in `cards_count[i]`) to the next N subsequent cards (i.e. indices i+1 to i+N)
+- Sum the total quantity of cards owned (originals plus won copies) and print the total
+"""
+
 
 @dataclass
 class Card:
@@ -36,17 +54,6 @@ def part1():
 
 @timer
 def part2():
-    """
-    Create a list to keep track of how many copies of each card
-    Search for how many wins in each card, count how many wins
-    When a win is found, update the cards_count at the index after the current card
-    The index depends on the number of wins, 1 win -> next card, 2 wins -> next 2 cards...
-    The trick is how much to add to the cards_count per index
-        This is the number of cards of the current index already calculated in the previous iteration
-        Ex, card 1 -> 4 wins
-            card 2, 3, 4 -> increases 1
-            When scan card 2, we will add 2 to the next card
-    """
     cards = read_file()
 
     cards_count = [1 for _ in cards]
@@ -80,4 +87,5 @@ def read_file() -> List[Card]:
     return cards
 
 
+part1()
 part2()

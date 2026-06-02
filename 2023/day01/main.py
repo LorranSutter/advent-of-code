@@ -2,6 +2,22 @@ import os
 
 from utils.timer import timer
 
+"""
+Preprocessing:
+- Read the input file and parse each line as a raw string of text
+
+Part 1:
+- For each line, iterate forward to find the first numeric digit and backward to find the last numeric digit
+- Combine these two digit characters into a single two-digit integer
+- Sum these combined values across all lines to calculate the total calibration value
+
+Part 2:
+- Similar to Part 1, but spelled-out digit words ("one" through "nine") are also considered valid digits
+- To properly handle overlapping digit words (e.g. "eightwo"), search for the first valid digit/word from the start of the string,
+  and the last valid digit/word from the end of the string
+- Map any spelled-out words to their corresponding numeric digits, combine the first and last digits, and sum them across all lines
+"""
+
 script_dir = os.path.dirname(__file__)
 rel_path = "input.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
@@ -130,4 +146,5 @@ def read_file():
     return calibrations
 
 
+part1()
 part2()

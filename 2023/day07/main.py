@@ -5,6 +5,23 @@ from dataclasses import dataclass
 
 from utils.timer import timer
 
+"""
+Preprocessing:
+- Read all hands and their bids from the input file
+- Initialize the card strengths dictionary mapping card characters to integer ranks (e.g. A=14, K=13, ..., 2=2)
+
+Part 1:
+- Classify each five-card hand into a type rank (0 to 6) based on card frequencies:
+  Five of a kind (6), Four of a kind (5), Full house (4), Three of a kind (3), Two pair (2), One pair (1), or High card (0)
+- Sort the hands by their hand type rank first, and secondarily by the individual card strengths from left to right to resolve ties
+- Calculate total winnings by multiplying each hand's bid by its sorted rank (1-indexed) and summing the results
+
+Part 2:
+- Introduce Joker ('J') rules: Jokers are wildcards that can represent any card to optimize/maximize the hand type rank (except when the hand has all 5 Jokers)
+- For individual card comparisons in tie-breaking, Jokers have the lowest individual strength rank (value of 1)
+- Sort the hands using the updated Joker hand types and strengths, calculate total winnings, and print the results
+"""
+
 
 @dataclass
 class Hand:
@@ -34,16 +51,6 @@ cards_strength = {
     "2": 2,
     "J": 1,
 }
-
-
-"""
-Read all hands
-Classify the hand type (pair, two pairs...) as a number (1, 2...)
-Classigy the strengh of the hand based on the cards_strength dict
-Make a modified sorting algorithm
-    Sort by the hand type
-    If there are two hands with same type, check stronger card
-"""
 
 
 @timer
@@ -143,4 +150,5 @@ def parse_file() -> List[Hand]:
     return hands
 
 
+part1()
 part2()
