@@ -14,7 +14,7 @@ Part 1:
 - Holding the button for ms milliseconds charges the boat speed to ms millimeters/millisecond, and the boat moves for the remaining (time - ms) milliseconds
 - The distance travelled is: d = ms * (time - ms)
 - Find the lower and upper bounds of holding times that exceed the record by scanning from the beginning and end respectively
-- Multiply the number of winning ways ($end - start + 1$) for all races together and print the product
+- Multiply the number of winning ways (end - start + 1) for all races together and print the product
 
 Part 2:
 - Concatenate the individual numbers of the input (times and records) to form a single, much larger race
