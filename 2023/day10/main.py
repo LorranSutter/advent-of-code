@@ -1,8 +1,94 @@
 import os
+
 from typing import List, Tuple
+from shapely.geometry import Polygon, Point
 from dataclasses import dataclass
 
 from utils.timer import timer
+from utils.utils import print_grid, tcolors
+
+"""
+Preprocessing:
+- Read the input file and parse it into a 2D matrix of strings.
+- Add boundary characters ('#') around the entire grid to simplify boundary checking in subsequent steps.
+
+Part 1:
+- Created a `Pipe` class that stores references to the two adjacent pipes connected to the current one.
+- Converted the 2D matrix into a unidimensional array of `Pipe` objects, where each pipe stores indices 
+  pointing to its connected neighbors in the array.
+- Starting from point S, initialized two pointers that traverse the pipe loop in opposite directions simultaneously.
+- When the two pointers meet, that position represents the farthest point from the start.
+- Counted the steps taken during each iteration to determine the distance.
+
+Alternative approach: Calculate the total length of the pipe loop and divide by 2.
+
+Example:
+  For the square loop:
+  .....
+  .S-7.
+  .|.|.
+  .L-J.
+  .....
+  
+  The two pointers start at S and move in opposite directions:
+  - Pointer 1: S → - → 7 → | → J → ...
+  - Pointer 2: S → | → L → - → J → ...
+  They meet at the farthest point after 4 steps.
+
+Part 2:
+- The goal is to count tiles enclosed within the main pipe loop.
+- This involves multiple steps (kept separate for readability, though they could be combined):
+
+  1. Find starting point: Scan the matrix to locate the starting position S.
+
+  2. Extract pipe loop path: Traverse from S to find all coordinates (x, y) that belong to the main pipe loop.
+     Return this as a list of coordinates.
+  
+  3. Create polygon geometry: Use the Shapely library to create a `Polygon` from the pipe loop coordinates.
+     This polygon will be used to determine if points are inside or outside the loop.
+  
+  4. Remove disconnected pipes: Some inputs contain pipes not connected to the main loop.
+     Mark these as ground ('.') using Shapely's `touches()` function to check if a point is part of the main loop.
+  
+  5. Flood fill to count enclosed tiles: 
+     - Iterate over each pipe in the main loop.
+     - For each pipe, examine adjacent ground tiles ('.').
+     - For unvisited adjacent ground, use Shapely's `contains()` to determine if it's inside or outside the loop.
+     - Apply Flood Fill (BFS) starting from that ground tile:
+       - Mark inner tiles as 'I' (green)
+       - Mark outer tiles as 'O' (blue)
+     - Skip flood fill if an adjacent tile is already marked or is a boundary ('#').
+     - The `flood_fill()` function returns the count of tiles filled, allowing us to track inner tile totals.
+
+Example visualization:
+  Before flood fill:
+  #############
+  #...........#
+  #.S-------7.#
+  #.|F-----7|.#
+  #.||.....||.#
+  #.||.....||.#
+  #.|L-7.F-J|.#
+  #.|..|.|..|.#
+  #.L--J.L--J.#
+  #...........#
+  #############
+
+  After flood fill:
+  #############
+  #OOOOOOOOOOO#
+  #OS-------7O#
+  #O|F-----7|O#
+  #O||OOOOO||O#
+  #O||OOOOO||O#
+  #O|L-7OF-J|O#
+  #O|II|O|II|O#
+  #OL--JOL--JO#
+  #OOOOOOOOOOO#
+  
+  Inner tiles (I): 4
+  Outer tiles (O): remaining ground tiles
+"""
 
 
 @dataclass
@@ -17,27 +103,13 @@ class Coord:
     Y: int
 
 
-@dataclass
-class Pipe2d:
-    Left: Coord
-    Right: Coord
-    Outer: List[Coord]
-
-
 script_dir = os.path.dirname(__file__)
-rel_path = "input_sample.txt"
+rel_path = "input_sample_4.txt"
 abs_file_path = os.path.join(script_dir, rel_path)
+
 
 @timer
 def part1():
-    """
-    Reads the whole matrix
-    Parse the matrix to unidimensional array of adjacent pipes
-
-    Get 2 pointers that leaves the starting point S and walk
-    in oposite directions simultaneously. Count each iteration.
-    The farthest point is when they find each other.
-    """
     matrix = read_file()
     start, pipes = parse_matrix_to_pipes(matrix)
 
@@ -69,43 +141,42 @@ def part1():
 
     print("Steps to farthest point:", steps)
 
+
 @timer
 def part2():
-    # TODO Implement part 2
-    """
-    Reads the whole matrix
-    Parse the matrix to unidimensional array of adjacent pipes
-    """
+
     matrix = read_file()
-    start, pipes_matrix = parse_matrix_to_pipes_2(matrix)
 
-    print(start)
-    print(pipes_matrix)
+    start = find_start(matrix)
+    pipes_path = find_pipes_path(start, matrix)
 
-    for row in pipes_matrix:
-        for col in row:
-            print(col)
+    # Build the polygon of the pipes path to check if a point is inside or outside of it
+    poly = Polygon([(pipe.X, pipe.Y) for pipe in pipes_path])
 
-    pipes_path = find_pipes_path(start, pipes_matrix)
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            if matrix[i][j] != "#" and not poly.touches(Point(i, j)):
+                matrix[i][j] = "."
 
-    print(pipes_path)
+    inner_tile_count, outer_tile_count = 0, 0
 
-    print(is_clockwise(pipes_path[0], pipes_path[1], pipes_path[2]))
+    inner_tile = f"{tcolors.GREEN}I{tcolors.RESET}"
+    outer_tile = f"{tcolors.BLUE}O{tcolors.RESET}"
 
-    # TODO Try to check the orientation of the polygon
-    # formed by the pipes https://github.com/LorranSutter/CVFEM/blob/master/geometry.py#L133
-    # Use that to know what points are inside and outised of the pipes loop
-    # For each point inside, make a graph trasversal to find all non adjacent points
-    # Mark visited points and sum the results to know the total points inside the loop
+    for pipe in pipes_path:
+        adj_grounds = get_adjacent_ground(matrix, pipe.X, pipe.Y)
+        for point in adj_grounds:
+            # Boundary or already visited
+            if matrix[point.X][point.Y] in ["#", outer_tile, inner_tile]:
+                continue
+            if poly.contains(Point(point.X, point.Y)):
+                inner_tile_count += flood_fill(matrix, point, inner_tile)
+            else:
+                outer_tile_count += flood_fill(matrix, point, outer_tile)
 
-
-def read_file() -> List[Tuple[str]]:
-    matrix = list()
-    with open(abs_file_path) as f:
-        for line in f:
-            matrix.append(tuple(tile for tile in line.strip()))
-
-    return matrix
+    print_grid(matrix)
+    print(f"Total tiles enclosed by the loop: {inner_tile_count}")
+    print(f"Total tiles outside the loop: {outer_tile_count}")
 
 
 def parse_matrix_to_pipes(matrix: List[Tuple[str]]) -> Tuple[Pipe, List[Pipe]]:
@@ -137,7 +208,7 @@ def parse_matrix_to_pipes(matrix: List[Tuple[str]]) -> Tuple[Pipe, List[Pipe]]:
                 case "S":
                     start = (
                         i * n + j,
-                        Pipe(*get_start_pipe_boundaries(matrix, i, j)),
+                        Pipe(*get_start_pipe_boundaries(matrix, i, j, True)),
                     )
                 case _:
                     # We have to append non-pipes to make the unidimensional matrix work
@@ -147,59 +218,72 @@ def parse_matrix_to_pipes(matrix: List[Tuple[str]]) -> Tuple[Pipe, List[Pipe]]:
     return start, pipes
 
 
-def parse_matrix_to_pipes_2(
-    matrix: List[Tuple[str]],
-) -> Tuple[Tuple[Coord, Pipe2d], List[List[Pipe2d]]]:
-    """
-    Converts the 2-dim to a unidimensional array
-    Each array element is a Pipe2d(left, right, outers), where
-    left and right points to the array index of the adjacent pipe
-    and outers are a list of adjacent ground ('.')
-    """
-    m, n = len(matrix), len(matrix[0])
+def find_start(matrix: List[List[str]]) -> Coord:
+    """Finds the coordinates of the starting point S"""
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            if matrix[i][j] == "S":
+                return Coord(i, j)
 
-    start = Tuple[Coord, Pipe2d]
-    pipes_matrix = list(list())
 
-    for i in range(m):
-        row = list()
-        for j in range(n):
-            adj_grounds = get_adjacent_ground(matrix, i, j)
-            match matrix[i][j]:
-                case "|":
-                    pipe = Pipe2d(Coord(i - 1, j), Coord(i + 1, j), adj_grounds)
-                case "-":
-                    pipe = Pipe2d(Coord(i, j - 1), Coord(i, j + 1), adj_grounds)
-                case "L":
-                    pipe = Pipe2d(Coord(i - 1, j), Coord(i, j + 1), adj_grounds)
-                case "J":
-                    pipe = Pipe2d(Coord(i - 1, j), Coord(i, j - 1), adj_grounds)
-                case "7":
-                    pipe = Pipe2d(Coord(i, j - 1), Coord(i + 1, j), adj_grounds)
-                case "F":
-                    pipe = Pipe2d(Coord(i, j + 1), Coord(i + 1, j), adj_grounds)
-                case "S":
-                    start = tuple(
-                        [
-                            Coord(i, j),
-                            Pipe2d(
-                                *get_start_pipe_boundaries(matrix, i, j, True),
-                                adj_grounds,
-                            ),
-                        ]
-                    )
-                case _:
-                    # We have to append non-pipes to make the unidimensional matrix work
-                    pipe = Pipe2d(Coord(-1, -1), Coord(-1, -1), [])
-            row.append(pipe)
-        pipes_matrix.append(row)
+def find_pipes_path(start: Coord, matrix: List[List[str]]) -> List[Coord]:
+    """Finds the path of the pipes starting from S until it finds S again"""
+    _, next_pipe = get_start_pipe_boundaries(matrix, start.X, start.Y)
 
-    return start, pipes_matrix
+    previous, left, right = start, None, None
+    pipe_path = list()
+    while True:
+        pipe_path.append(previous)
+        # Got back to the starting point
+        if next_pipe == start:
+            break
+
+        match matrix[next_pipe.X][next_pipe.Y]:
+            case "|":
+                left = Coord(next_pipe.X - 1, next_pipe.Y)
+                right = Coord(next_pipe.X + 1, next_pipe.Y)
+            case "-":
+                left = Coord(next_pipe.X, next_pipe.Y - 1)
+                right = Coord(next_pipe.X, next_pipe.Y + 1)
+            case "L":
+                left = Coord(next_pipe.X - 1, next_pipe.Y)
+                right = Coord(next_pipe.X, next_pipe.Y + 1)
+            case "J":
+                left = Coord(next_pipe.X - 1, next_pipe.Y)
+                right = Coord(next_pipe.X, next_pipe.Y - 1)
+            case "7":
+                left = Coord(next_pipe.X, next_pipe.Y - 1)
+                right = Coord(next_pipe.X + 1, next_pipe.Y)
+            case "F":
+                left = Coord(next_pipe.X, next_pipe.Y + 1)
+                right = Coord(next_pipe.X + 1, next_pipe.Y)
+
+        # Make sure to not return back to the same pipe
+        if previous != left:
+            previous = next_pipe
+            next_pipe = left
+        else:
+            previous = next_pipe
+            next_pipe = right
+
+    return pipe_path
 
 
 def get_start_pipe_boundaries(
-    matrix: List[Tuple[str]], i: int, j: int, pipe2d: bool = False
+    matrix: List[Tuple[str]], i: int, j: int, unidim: bool = False
 ) -> List[Coord | int]:
+    """
+    Returns the coordinates of the adjacent pipes to the starting point S
+
+    Arguments:
+        matrix: 2D matrix representing the tiles
+        i: row index of the starting point S
+        j: column index of the starting point S
+        unidim: whether to return unidimensional indices
+
+    Returns:
+        List[Coord | int]: coordinates of the adjacent pipes
+    """
     m, n = len(matrix), len(matrix[0])
     pipe_boundaries = list()
 
@@ -209,79 +293,73 @@ def get_start_pipe_boundaries(
     # . S F
     # . J .
     if i > 0 and matrix[i - 1][j] in ("|", "7", "F"):
-        pipe_boundaries.append(Coord(i - 1, j) if pipe2d else (i - 1) * n + j)
+        pipe_boundaries.append((i - 1) * n + j if unidim else Coord(i - 1, j))
     if i < m - 1 and matrix[i + 1][j] in ("|", "L", "J"):
-        pipe_boundaries.append(Coord(i + 1, j) if pipe2d else (i + 1) * n + j)
+        pipe_boundaries.append((i + 1) * n + j if unidim else Coord(i + 1, j))
     if j > 0 and matrix[i][j - 1] in ("-", "L", "F"):
-        pipe_boundaries.append(Coord(i, j - 1) if pipe2d else i * n + j - 1)
+        pipe_boundaries.append(i * n + j - 1 if unidim else Coord(i, j - 1))
     if j < n - 1 and matrix[i][j + 1] in ("-", "J", "7"):
-        pipe_boundaries.append(Coord(i, j + 1) if pipe2d else i * n + j + 1)
+        pipe_boundaries.append(i * n + j + 1 if unidim else Coord(i, j + 1))
 
     return pipe_boundaries
 
 
 def get_adjacent_ground(matrix: List[Tuple[str]], i: int, j: int) -> List[Coord]:
-    m, n = len(matrix), len(matrix[0])
+    """Returns the coordinates of the adjacent ground ('.') to the given coordinates (i, j)"""
     adj_grounds = list()
 
-    if i > 0 and j > 0 and matrix[i - 1][j - 1] == ".":
+    if matrix[i - 1][j - 1] == ".":
         adj_grounds.append(Coord(i - 1, j - 1))
-    if i > 0 and matrix[i - 1][j] == ".":
+    if matrix[i - 1][j] == ".":
         adj_grounds.append(Coord(i - 1, j))
-    if i > 0 and j < n - 1 and matrix[i - 1][j + 1] == ".":
+    if matrix[i - 1][j + 1] == ".":
         adj_grounds.append(Coord(i - 1, j + 1))
-    if j < n - 1 and matrix[i][j + 1] == ".":
+    if matrix[i][j + 1] == ".":
         adj_grounds.append(Coord(i, j + 1))
-    if i < m - 1 and j < n - 1 and matrix[i + 1][j + 1] == ".":
+    if matrix[i + 1][j + 1] == ".":
         adj_grounds.append(Coord(i + 1, j + 1))
-    if i < m - 1 and matrix[i + 1][j] == ".":
+    if matrix[i + 1][j] == ".":
         adj_grounds.append(Coord(i + 1, j))
-    if i < m - 1 and j > 0 and matrix[i + 1][j - 1] == ".":
+    if matrix[i + 1][j - 1] == ".":
         adj_grounds.append(Coord(i + 1, j - 1))
-    if j > 0 and matrix[i][j - 1] == ".":
+    if matrix[i][j - 1] == ".":
         adj_grounds.append(Coord(i, j - 1))
 
     return adj_grounds
 
 
-def find_pipes_path(
-    start: Tuple[Coord, Pipe2d], pipes_matrix: List[List[Pipe2d]]
-) -> List[Coord]:
-    previous, next_pipe = start[0], start[1].Left
-    pipe_path = list()
-    while True:
-        pipe_path.append(previous)
-        # Got back to the starting point
-        if next_pipe == start[0]:
-            break
+def flood_fill(matrix: List[List[str]], start: Coord, fill_char: str) -> int:
+    """Performs a flood fill algorithm starting from the given coordinates and fills all connected '.' with the given fill_char"""
 
-        # Make sure to not return back to the same pipe
-        if previous != pipes_matrix[next_pipe.X][next_pipe.Y].Left:
-            previous = next_pipe
-            next_pipe = pipes_matrix[next_pipe.X][next_pipe.Y].Left
-        else:
-            previous = next_pipe
-            next_pipe = pipes_matrix[next_pipe.X][next_pipe.Y].Right
+    dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+    queue = [start]
+    filled = 1
+    matrix[start.X][start.Y] = fill_char
 
-    return pipe_path
+    while queue:
+        current = queue.pop(0)
 
+        for d in dirs:
+            adj = Coord(current.X + d[0], current.Y + d[1])
+            if matrix[adj.X][adj.Y] == ".":
+                queue.append(adj)
+                matrix[adj.X][adj.Y] = fill_char
+                filled += 1
 
-def cross(v1: List[int] | Tuple[int], v2: List[int] | Tuple[int]):
-    return v1[0] * v2[1] - v2[0] * v1[1]
+    return filled
 
 
-def is_clockwise(A: Coord, B: Coord, C: Coord) -> bool:
-    """
-    Get the 3 first points
-    Make 2 vectors
-    Calculate the cross product between the vectors
-    It is clockwise if
-    """
+def read_file() -> List[List[str]]:
+    matrix = list()
+    with open(abs_file_path) as f:
+        for line in f:
+            matrix.append(["#"] + [tile for tile in line.strip()] + ["#"])
 
-    v1 = (B.X - A.X, B.Y - A.Y)
-    v2 = (C.X - B.X, C.Y - B.Y)
+    matrix.insert(0, ["#"] * len(matrix[0]))
+    matrix.append(["#"] * len(matrix[0]))
 
-    return cross(v1, v2) < 0
+    return matrix
 
 
+part1()
 part2()
