@@ -82,6 +82,13 @@ def check_parts(main_file: Path) -> dict:
     return parts
 
 
+def get_total_days(year: str) -> int:
+    """Returns the expected total number of days for the given year."""
+    if year == "2025":
+        return 12
+    return 25
+
+
 def generate_root_summary(results: dict) -> str:
     """Generates the root README summary with progress bars per year."""
     lines = []
@@ -99,7 +106,8 @@ def generate_root_summary(results: dict) -> str:
         solved = sum(
             1 for d in days.values() for p, s in d.items() if s
         )
-        total = sum(len(d) for d in days.values())
+        total_days = get_total_days(year)
+        total = total_days * 2
         total_solved += solved
         total_parts += total
 
@@ -123,8 +131,9 @@ def generate_root_summary(results: dict) -> str:
 
 def generate_year_readme(year: str, days: dict) -> str:
     """Generates the day table for a year README."""
+    total_days = get_total_days(year)
     solved = sum(1 for d in days.values() for p, s in d.items() if s)
-    total = sum(len(d) for d in days.values())
+    total = total_days * 2
     pct = (solved / total * 100) if total > 0 else 0
     filled = round(pct / 5)
     bar = "█" * filled + "░" * (20 - filled)
@@ -135,17 +144,24 @@ def generate_year_readme(year: str, days: dict) -> str:
     lines.append("| Day | Part 1 | Part 2 |")
     lines.append("|:----|:------:|:------:|")
 
-    for day_num in sorted(days.keys()):
-        parts = days[day_num]
-        cols = []
-        for p in [1, 2]:
-            cols.append("⭐" if parts.get(p, False) else "⬚")
-        lines.append(
-            f"| [Day {day_num:02d}](./day{day_num:02d}/) | {cols[0]} | {cols[1]} |"
-        )
+    max_day = max([total_days] + list(days.keys()))
+    for day_num in range(1, max_day + 1):
+        if day_num in days:
+            parts = days[day_num]
+            cols = []
+            for p in [1, 2]:
+                cols.append("⭐" if parts.get(p, False) else "⬚")
+            lines.append(
+                f"| [Day {day_num:02d}](./day{day_num:02d}/) | {cols[0]} | {cols[1]} |"
+            )
+        else:
+            lines.append(
+                f"| Day {day_num:02d} | ⬚ | ⬚ |"
+            )
 
     lines.append("")
     return "\n".join(lines)
+
 
 
 def inject_between_markers(content: str, summary: str, default_header: str) -> str:
