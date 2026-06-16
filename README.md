@@ -1,6 +1,6 @@
 # 🎄 Advent of Code
 
-[![Dashboard](https://img.shields.io/badge/Dashboard-coding--challenges-blue)](https://github.com/LorranSutter/coding-challenges)
+[![Dashboard](https://img.shields.io/badge/Dashboard-coding--challenges-blue?style=for-the-badge)](https://github.com/LorranSutter/coding-challenges) <!-- BADGE:START -->[![Solved Challenges](https://img.shields.io/badge/Solved%20Challenges-100-brightgreen?style=for-the-badge&logo=python&logoColor=white)](https://adventofcode.com/)<!-- BADGE:END -->
 
 This repository contains my solutions for the [Advent of Code](https://adventofcode.com/) event.
 

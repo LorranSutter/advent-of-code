@@ -184,11 +184,24 @@ def inject_between_markers(content: str, summary: str, default_header: str) -> s
         return f"{default_header}\n\n{block}\n"
 
 
-def update_root_readme(root: Path, summary: str) -> None:
-    """Injects the summary into the root README.md between markers."""
+def update_root_readme(root: Path, summary: str, total_solved: int) -> None:
+    """Injects the summary and badge into the root README.md between markers."""
     readme_path = root / "README.md"
     content = readme_path.read_text()
 
+    # 1. Update the badge first
+    badge_start = "<!-- BADGE:START -->"
+    badge_end = "<!-- BADGE:END -->"
+    badge_content = f"{badge_start}[![Solved Challenges](https://img.shields.io/badge/Solved%20Challenges-{total_solved}-brightgreen?style=for-the-badge&logo=python&logoColor=white)](https://adventofcode.com/){badge_end}"
+
+    if badge_start in content and badge_end in content:
+        pattern = re.compile(
+            re.escape(badge_start) + r".*?" + re.escape(badge_end),
+            re.DOTALL,
+        )
+        content = pattern.sub(badge_content, content)
+
+    # 2. Update the progress section
     start_marker = "<!-- SUMMARY:START -->"
     end_marker = "<!-- SUMMARY:END -->"
     block = f"{start_marker}\n{summary}\n{end_marker}"
@@ -235,9 +248,14 @@ def update_year_readme(root: Path, year: str, table_summary: str) -> None:
 def main():
     results = find_days(ROOT)
 
+    # Calculate total solved parts
+    total_solved = sum(
+        1 for days in results.values() for day in days.values() for part_solved in day.values() if part_solved
+    )
+
     # Generate and update root README
     root_summary = generate_root_summary(results)
-    update_root_readme(ROOT, root_summary)
+    update_root_readme(ROOT, root_summary, total_solved)
 
     # Generate and update each year README
     for year in sorted(results.keys()):
