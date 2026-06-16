@@ -112,8 +112,8 @@ def generate_root_summary(results: dict) -> str:
         total_parts += total
 
         pct = (solved / total * 100) if total > 0 else 0
-        filled = round(pct / 5)
-        bar = "█" * filled + "░" * (20 - filled)
+        unsolved = total - solved
+        bar = "█" * solved + "░" * unsolved
 
         section_lines.append(f"### [{year}](./{year}/)")
         section_lines.append("")
@@ -135,8 +135,8 @@ def generate_year_readme(year: str, days: dict) -> str:
     solved = sum(1 for d in days.values() for p, s in d.items() if s)
     total = total_days * 2
     pct = (solved / total * 100) if total > 0 else 0
-    filled = round(pct / 5)
-    bar = "█" * filled + "░" * (20 - filled)
+    unsolved = total - solved
+    bar = "█" * solved + "░" * unsolved
 
     lines = []
     lines.append(f"`{bar}` **{solved}/{total}** parts solved ({pct:.0f}%)")
