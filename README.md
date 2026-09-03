@@ -1,6 +1,6 @@
 # 🎄 Advent of Code
 
-[![Dashboard](https://img.shields.io/badge/Dashboard-coding--challenges-blue?style=for-the-badge)](https://github.com/LorranSutter/coding-challenges) <!-- BADGE:START -->[![Solved Challenges](https://img.shields.io/badge/Solved%20Challenges-110-brightgreen?style=for-the-badge&logo=python&logoColor=white)](https://adventofcode.com/)<!-- BADGE:END -->
+[![Dashboard](https://img.shields.io/badge/Dashboard-coding--challenges-blue?style=for-the-badge)](https://github.com/LorranSutter/coding-challenges) <!-- BADGE:START -->[![Solved Challenges](https://img.shields.io/badge/Solved%20Challenges-112-brightgreen?style=for-the-badge&logo=python&logoColor=white)](https://adventofcode.com/)<!-- BADGE:END -->
 
 This repository contains my solutions for the [Advent of Code](https://adventofcode.com/) event.
 
@@ -9,11 +9,11 @@ Advent of Code is an annual coding challenge that runs from December 1st to Dece
 <!-- SUMMARY:START -->
 ## 📊 Progress
 
-> **Overall: 110/174 parts solved (63%)**
+> **Overall: 112/174 parts solved (64%)**
 
 ### [2022](./2022/)
 
-`██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░` **10/50** parts solved (20%)
+`████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░` **12/50** parts solved (24%)
 
 ### [2023](./2023/)
 
